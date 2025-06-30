@@ -517,8 +517,14 @@ class VisualizationAgent(EnhancedAgent):
         """Get AI response for analysis"""
         
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
+            if not openai.api_key:
+                return "AI analysis temporarily unavailable - API key not configured"
+                
+            from openai import OpenAI
+            client = OpenAI(api_key=openai.api_key)
+            
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",  # Use the more affordable model
                 messages=[
                     {"role": "system", "content": "You are a master data visualization strategist and business intelligence expert."},
                     {"role": "user", "content": prompt}
