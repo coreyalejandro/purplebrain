@@ -61,6 +61,34 @@ try:
 except ImportError:
     openai = None
 
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI
+app = FastAPI(
+    title="PurpleBrain API",
+    description="Next-Level AI Agent Orchestration Platform",
+    version="2.0.0"
+)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# MongoDB setup
+MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+client = MongoClient(MONGO_URL)
+db = client.purplebrain
+
 # Pydantic models
 class AgentTask(BaseModel):
     query: str
