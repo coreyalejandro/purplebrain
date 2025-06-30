@@ -24,7 +24,6 @@ from pydantic import BaseModel
 import motor.motor_asyncio
 from pymongo import MongoClient
 import httpx
-import openai
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -55,8 +54,12 @@ MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = MongoClient(MONGO_URL)
 db = client.purplebrain
 
-# OpenAI setup
-openai.api_key = os.environ.get('OPENAI_API_KEY')
+# OpenAI setup - will be configured when API key is available
+try:
+    import openai
+    openai.api_key = os.environ.get('OPENAI_API_KEY')
+except ImportError:
+    openai = None
 
 # Pydantic models
 class AgentTask(BaseModel):
